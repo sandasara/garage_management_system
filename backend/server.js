@@ -14,7 +14,6 @@ app.get('/' , (request, response)=> {
     return response.json("From Backend Side");
 })
 
-
 db.sequelize.sync().then(() => {
     app.listen(8081, ()=> {
         console.log("listning: http://localhost:8081/")

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { Customer } = require("../models/Customer");
+const { Customer } = require("../models");
 
 
 router.get("/", (req, res) => {
@@ -9,9 +9,9 @@ router.get("/", (req, res) => {
 
 router.post("/", async (req, res) => {
     const customer = req.body;
-    await Customer.create(customer)
+    await Customer.create(customer);
     res.json(customer);
-});
+  });
 
 
 module.exports = router
