@@ -6,7 +6,7 @@ import Home from './Pages/Home';
 import Appointment from './Pages/Appointment';
 import Contact from './Pages/Contact';
 import Login from './Pages/Login';
-import Signin from './Pages/Signin';
+import Signup from './Pages/Signup';
 import CustomerDashboard from './Pages/Customer/CustomerDashboard';
 import MakeApp from './Pages/Customer/MakeApp';
 import MyAppointment from './Pages/Customer/MyAppointment';
@@ -39,7 +39,7 @@ function App() {
         <Route path="/appointment" element={<Appointment />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard/customer" element={<CustomerDashboard />} />
         <Route path="/dashboard/customer/makeappointment" element={<MakeApp />} />
         <Route path="/dashboard/customer/myappointment" element={<MyAppointment />} />

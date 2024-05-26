@@ -1,15 +1,15 @@
 import React from 'react';
 import Layout from '../components/Layout/Layout';
-import SigninForm from '../components/Signin/SigninForm';
+import SignupForm from '../components/Signup/SignupForm';
 
-function Signin() {
+function Signup() {
   return (
     <Layout>
      
-      <SigninForm />
+      <SignupForm />
     </Layout>
   );
 }
 
-export default Signin;
+export default Signup;
 

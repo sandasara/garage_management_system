@@ -7,7 +7,7 @@ const Header = () => {
         <a href="/" className="px-2 hover:bg-gray-600">Home</a>
         <a href="/Appointment" className="px-2 hover:bg-gray-600">Appointment</a>
         <a href="/Contact" className="px-2 hover:bg-gray-600">Contact</a>
-        <a href="/Signin" className="px-2 hover:bg-gray-600">Sign In</a>
+        <a href="/Signup" className="px-2 hover:bg-gray-600">Sign Up</a>
         <a href="/Login" className="px-2 hover:bg-gray-600">Log In</a>
       </nav>
     </div>
