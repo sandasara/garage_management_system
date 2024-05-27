@@ -10,10 +10,10 @@ app.use(express.json());
 const db = require("./models");
 
 app.post('/signup' , (req, res) => {
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = req.body.password;
+    const { username, email, password } = req.body;
 
+    const User = require('./models').User;
+    
     con.query("INSERT INTO users (username, email, password) VALUES(?, ?, ?)", [username,email,password],
         (err, result) => {
             if(result){
@@ -48,7 +48,23 @@ app.post('/login' , (req, res) => {
 
 })
 
+app.post('/appointmentform' , (req, res) => {
+    const { firstname,lastname,phone,vehicle_type,vehicle_no, select_service, date, time, description, appointment_type } = req.body;
 
+    const User = require('./models').User;
+    
+    con.query("INSERT INTO appointmentform (firstname,lastname,phone,vehicle_type,vehicle_no, select_service, date, time, description, appointment_type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [firstname,lastname,phone,vehicle_type,vehicle_no, select_service, date, time, description, appointment_type],
+        (err, result) => {
+            if(result){
+                res.send(result);
+            }
+            else{
+                res.send({message: "Enter Correct Details"})
+            }
+        }
+    )
+
+})
 
 const modelsRouter = require("./routes/Routes");
 //app.use("/customer", modelsRouter );
