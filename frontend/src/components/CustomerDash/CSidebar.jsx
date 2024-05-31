@@ -2,7 +2,7 @@ import React from 'react'
 
 function CSidebar() {
   return (
-    <div className="min-h-screen flex">
+    <div>
 
       <aside className="w-1/6 bg-gray-800 text-white flex flex-col">
         <div className="flex items-center py-24 px-12 justify-center h-24 bg-gray-900">
@@ -18,7 +18,7 @@ function CSidebar() {
           <a href="/dashboard/customer/myappointment" className="block py-4 px-6 hover:bg-gray-600">
             My Appointment
           </a>
-          <a href="" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/" className="block py-4 px-6 hover:bg-gray-600">
             Log Out
           </a>
         </nav>

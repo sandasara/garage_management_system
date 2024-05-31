@@ -1,5 +1,7 @@
 import React from 'react';
 import AppointForm from '../Appointment/AppointForm';
+//import CSidebar from '../../components/CustomerDash/CSidebar'
+
 
 function CAppointment() {
   return (
@@ -16,10 +18,13 @@ function CAppointment() {
           <a href="/dashboard/customer/makeappointment" className="block py-4 px-6 hover:bg-gray-600">
             Appointment
           </a>
-          <a href="/MyAppointment" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/dashboard/customer/MyAppointment" className="block py-4 px-6 hover:bg-gray-600">
             My Appointment
           </a>
-          <a href="" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/dashboard/customer/givefeedback" className="block py-4 px-6 hover:bg-gray-600">
+            Give Feedback
+          </a>
+          <a href="/" className="block py-4 px-6 hover:bg-gray-600">
             Log Out
           </a>
         </nav>

@@ -12,13 +12,16 @@ const ProfilePage = () => {
           <a href="/dashboard/employee" className="block py-8 px-6 justify-center bg-gray-700 hover:bg-gray-600">
             Profile
           </a>
-          <a href="/AppointmentDetails" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/dashboard/employee/AppointmentDetails" className="block py-4 px-6 hover:bg-gray-600">
             Appointment Details
           </a>
-          <a href="/job" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/dashboard/employee/jobDetails" className="block py-4 px-6 hover:bg-gray-600">
             Job Details
           </a>
-          <a href="" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/dashboard/manager/veiwfeedback" className="block py-4 px-6 hover:bg-gray-600">
+            View Feedback
+          </a>
+          <a href="/" className="block py-4 px-6 hover:bg-gray-600">
             Log Out
           </a>
 
@@ -36,7 +39,7 @@ const ProfilePage = () => {
                 <input
                   type="text"
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                  defaultValue="Amal"
+                 
                 />
               </div>
               <div>
@@ -44,7 +47,7 @@ const ProfilePage = () => {
                 <input
                   type="text"
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                  defaultValue="Kumara"
+               
                 />
               </div>
             </div>
@@ -53,7 +56,7 @@ const ProfilePage = () => {
               <input
                 type="email"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                defaultValue="amalkumara@gmail.com"
+               
               />
             </div>
             <div>
@@ -61,7 +64,7 @@ const ProfilePage = () => {
               <input
                 type="text"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                defaultValue="07--------"
+                
               />
             </div>
             <div>
@@ -69,7 +72,7 @@ const ProfilePage = () => {
               <input
                 type="text"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                defaultValue="Kandy Rd,Kadawatha."
+               
               />
             </div>
             
@@ -79,7 +82,7 @@ const ProfilePage = () => {
               <input
                 type="password"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                defaultValue="********"
+                
               />
             </div>
             <div className="pt-4">

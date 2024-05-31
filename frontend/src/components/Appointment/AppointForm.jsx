@@ -10,17 +10,17 @@ function AppointmentForm() {
         phone: '',
         vehicle_type: '',
         vehicle_no: '',
-        select_service: {
-            Wash_and_Grooming: false,
-            Lube_Service: false,
-            Exterior_and_Interior_Detailing: false,
-            Engine_Tune_Ups: false,
-            Undercarriage_Degreasing: false,
-            Windscreen_Treatments: false,
-            Inspection_Reports: false,
-            Wheel_Alignment: false,
-            Battery_Services: false,
-        },
+        // select_service: {
+        //     Wash_and_Grooming: false,
+        //     Lube_Service: false,
+        //     Exterior_and_Interior_Detailing: false,
+        //     Engine_Tune_Ups: false,
+        //     Undercarriage_Degreasing: false,
+        //     Windscreen_Treatments: false,
+        //     Inspection_Reports: false,
+        //     Wheel_Alignment: false,
+        //     Battery_Services: false,
+        // },
         date: '',
         time: '',
         description: '',
@@ -57,15 +57,16 @@ function AppointmentForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8081/appointmentform', formData)
+        axios.post('http://localhost:5000/appointmentform', formData)
             .then(response => {
                 console.log('Appointment created successfully', response.data);
                 alert('Appointment created successfully!');
             })
             .catch(error => {
-                console.error('There was an error creating the appointment!', error);
-                alert('Error creating appointment. Check console for details.');
+                console.error('Error sending appointment data to backend!', error);
+                alert('Error sending appointment data to backend.');
             });
+        console.log(formData)
     };
 
     return (
@@ -93,7 +94,7 @@ function AppointmentForm() {
                         <input type="text" name="vehicle_no" value={formData.vehicle_no} onChange={handleInputChange} className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                     </div>
                 </div>
-                <div className="mt-4">
+                {/* <div className="mt-4">
                     <label className="block font-semibold text-gray-700">Select services</label>
                     <div className="grid grid-cols-3 gap-4 text-gray-700">
                         <div>
@@ -139,7 +140,7 @@ function AppointmentForm() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div className="grid grid-cols-2 gap-6 mt-4">
                     <div>
                         <label className="block font-semibold text-gray-700">Date / Time</label>

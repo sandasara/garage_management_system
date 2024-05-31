@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
+import {useNavigate} from 'react-router-dom';
 import Axios from "axios";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
+  const navigate = useNavigate(); 
     
   const handleLogin = (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:8081/login", {
+    Axios.post("http://localhost:5000/login", {
       username: username,
       password: password,
     }).then((response) => {
-      if (response.data.message) {
-        setLoginStatus(response.data.message);
+      if (response.data === 'exist') {
+        // setLoginStatus(response.data);
+        navigate('/');
       } else {
-        setLoginStatus("Login Successfully");
+        setLoginStatus("Login failed. Check credentials.");
       }
+      console.log(response.data)
     }).catch(error => {
       console.error('Login error:', error);
       setLoginStatus("Login failed: " + error.message);

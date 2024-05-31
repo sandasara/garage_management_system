@@ -9,7 +9,7 @@ function SignupForm() {
 
   const handleSignup = (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:8081/signup", {
+    Axios.post("http://localhost:5000/signup", {
       username: username,
       email: email,
       password: password,
