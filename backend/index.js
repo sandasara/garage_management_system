@@ -4,77 +4,111 @@ const cors = require('cors')
 
 const app = express()
 app.use(cors())
-
 app.use(express.json());
 
-const db = require("./models");
 
-app.post('/signup' , (req, res) => {
-    const { username, email, password } = req.body;
+//Making database connection to mysql database
+const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "#Juliet25",
+    database: "garagebeta",
+  });
 
-    const User = require('./models').User;
-    
-    con.query("INSERT INTO users (username, email, password) VALUES(?, ?, ?)", [username,email,password],
-        (err, result) => {
-            if(result){
-                res.send(result);
+//Adding console statement to check the success of database connection
+con.connect((err) => {
+    if (err) {
+        console.error('Error connecting to MySQL:', err);
+        return;
+    }
+    console.log('Connected to MySQL');
+});
+
+//API to add new appointment to appointmentform table.
+//New appointment details are coming from the form in appointmentform component
+app.post('/appointmentform', (req, res) => {
+    const { firstname, lastname, phone, vehicle_type, vehicle_no, date, time, description, appointment_type } = req.body;
+    const query = `
+        INSERT INTO appointmentform 
+        (firstname, lastname, phone, vehicle_type, vehicle_no, date, time, description, appointment_type) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [firstname, lastname, phone, vehicle_type, vehicle_no, date, time, description, appointment_type];
+
+    con.query(query, values, (err, result) => {
+        if (err) {
+            console.error('Error inserting data:', err);
+            return res.status(500).send({ message: "Backend: Enter Correct Details" });
+        }    
+        res.send(result);
+    });
+});
+
+
+//API to check user for login
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const query = 'SELECT * FROM users WHERE email = ?';
+        con.query(query, [email], (err, results) => {
+            if (err) {
+                console.error('Error executing query:', err);
+                return res.status(500).json("fail");
             }
-            else{
-                res.send({message: "Enter Correct Details"})
-            }
-        }
-    )
-
-})
-
-app.post('/login' , (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    con.query("SELECT * FROM users WHERE username = ? AND password = ?",[username,password],
-        (err, result) => {
-            if(err){
-                req.setEncoding({err: err});
-            }
-            else{
-                if(result.length >0){
-                    res.send(result);
+            if (results.length > 0) {
+                const user = results[0];
+                if (user.password === password) {
+                    res.json("exist");
+                } else {
+                    res.json("incorrect password");
                 }
-                else
-                    res.send({message: "Username oor Passeord Incorrect"})
+            } else {
+                res.json("notexist");
             }
-        }
-    )
+        });
+    } catch (e) {
+        console.error('Error in try-catch:', e);
+        res.json("fail");
+    }
+});
 
-})
+//API for sign up
+app.post('/signup', async (req, res) => {
+    const { email, username, password } = req.body;
+    const checkQuery = 'SELECT * FROM users WHERE email = ?';
+    const insertQuery = 'INSERT INTO users (email, username, password) VALUES (?, ?, ?)';
 
-app.post('/appointmentform' , (req, res) => {
-    const { firstname,lastname,phone,vehicle_type,vehicle_no, select_service, date, time, description, appointment_type } = req.body;
-
-    const User = require('./models').User;
-    
-    con.query("INSERT INTO appointmentform (firstname,lastname,phone,vehicle_type,vehicle_no, select_service, date, time, description, appointment_type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [firstname,lastname,phone,vehicle_type,vehicle_no, select_service, date, time, description, appointment_type],
-        (err, result) => {
-            if(result){
-                res.send(result);
+    try {
+        con.query(checkQuery, [email], async (err, results) => {
+            if (err) {
+                console.error('Error executing query:', err);
+                return res.status(500).json("fail");
             }
-            else{
-                res.send({message: "Enter Correct Details"})
+            if (results.length > 0) {
+                res.json("exist");
+            } else {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                con.query(insertQuery, [email, username, hashedPassword], (err, result) => {
+                    if (err) {
+                        console.error('Error inserting data:', err);
+                        return res.status(500).json("fail");
+                    }
+                    res.json("notexist");
+                });
             }
-        }
-    )
+        });
+    } catch (e) {
+        console.error('Error in try-catch:', e);
+        res.json("fail");
+    }
+});
 
-})
-
-const modelsRouter = require("./routes/Routes");
-//app.use("/customer", modelsRouter );
-
+//Home API (Just for the purpose for checking if the backend is running or not)
 app.get('/' , (req, res)=> {
     return res.json("From Backend Side");
 })
 
-db.sequelize.sync().then(() => {
-    app.listen(8081, ()=> {
-        console.log("listning: http://localhost:8081/")
-    })
-});
+//Starting the server on port 50000
+app.listen(5000, ()=> {
+    console.log("listning: http://localhost:5000/")
+})
