@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Axios from "axios";
+import { useUser } from '../../UserContext';
 
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
-  const navigate = useNavigate(); 
-    
+  const navigate = useNavigate();
+  const { setUser } = useUser();  // Use the setUser function from context
+
   const handleLogin = (e) => {
     e.preventDefault();
     Axios.post("http://localhost:5000/login", {
       username: username,
       password: password,
     }).then((response) => {
-      if (response.data === 'exist') {
-        // setLoginStatus(response.data);
+      if (response.data.status === 'exist') {
+        setUser({ role: response.data.role, username: response.data.username });  // Set user info in context
         navigate('/');
+        console.log(response.data.role)
       } else {
         setLoginStatus("Login failed. Check credentials.");
       }
-      console.log(response.data)
     }).catch(error => {
       console.error('Login error:', error);
       setLoginStatus("Login failed: " + error.message);

@@ -13,6 +13,7 @@ function SignupForm() {
       username: username,
       email: email,
       password: password,
+      role: 'customer'
     }).then((response) => {
       if (response.data.message) {
         setSignupStatus(response.data.message);

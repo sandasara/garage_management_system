@@ -20,20 +20,21 @@ import CustomerDetailsPage from './Pages/Manager/CustomerDetailsPage';
 import EmployeeDetailsPage from './Pages/Manager/EmployeeDetailsPage';
 import VehicleDetailsPage from './Pages/Manager/VehicleDetailsPage';
 import MAppointmentDetails from './Pages/Manager/MAppointmentDetails';
+import ProtectedRoute from './components/ProtectedRoute';  // Import ProtectedRoute
+
 
 
 function App() {
-
-  const [listOfCustomers, setListOfCustomers] = useState([])
-  useEffect(() => {
-    axios.get("http://localhost:8081/customers")
-      .then(response => {
-        setListOfCustomers(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching customer data:', error);
-      });
-  }, []);
+  // const [listOfCustomers, setListOfCustomers] = useState([])
+  // useEffect(() => {
+  //   axios.get("http://localhost:8081/customers")
+  //     .then(response => {
+  //       setListOfCustomers(response.data);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching customer data:', error);
+  //     });
+  // }, []);
 
   return (
     <>
