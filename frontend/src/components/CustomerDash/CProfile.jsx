@@ -18,7 +18,10 @@ const CProfile = () => {
           <a href="/dashboard/customer/myappointment" className="block py-4 px-6 hover:bg-gray-600">
             My Appointment
           </a>
-          <a href="" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/dashboard/customer/givefeedback" className="block py-4 px-6 hover:bg-gray-600">
+            Give Feedback
+          </a>
+          <a href="/" className="block py-4 px-6 hover:bg-gray-600">
             Log Out
           </a>
         </nav>

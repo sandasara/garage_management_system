@@ -13,10 +13,11 @@ function SignupForm() {
       username: username,
       email: email,
       password: password,
+      role: 'customer'
     }).then((response) => {
-      if (response.data.message) {
-        setSignupStatus(response.data.message);
-      } else {
+      if (response.data === 'exist') {
+        setSignupStatus('User already exists');
+      } else if(response.data === 'notexist') {
         setSignupStatus("Account Created Successfully");
       }
     }).catch(error => {

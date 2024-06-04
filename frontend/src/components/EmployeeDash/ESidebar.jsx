@@ -8,14 +8,17 @@ function ESidebar() {
           <div className="w-32 h-32 rounded-full bg-gray-500"></div>
         </div>
         <nav className="flex-grow">
-          <a href="/dashboard/employee" className="block py-8 px-6 bg-gray-700 hover:bg-gray-600">
+        <a href="/dashboard/employee" className="block py-8 px-6 justify-center bg-gray-700 hover:bg-gray-600">
             Profile
           </a>
-          <a href="/AppointmentDetails" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/dashboard/employee/AppointmentDetails" className="block py-4 px-6 hover:bg-gray-600">
             Appointment Details
           </a>
-          <a href="/job" className="block py-4 px-6 hover:bg-gray-600">
+          <a href="/dashboard/employee/jobDetails" className="block py-4 px-6 hover:bg-gray-600">
             Job Details
+          </a>
+          <a href="/dashboard/manager/veiwfeedback" className="block py-4 px-6 hover:bg-gray-600">
+            View Feedback
           </a>
           <a href="/" className="block py-4 px-6 hover:bg-gray-600">
             Log Out
