@@ -46,7 +46,7 @@ app.post('/appointmentform', (req, res) => {
     });
 });
 
-//API FOR VIEW APPOINTMENT
+//API FOR VIEWING ALL APPOINTMENTS
 app.get('/appointments', (req, res) => {
     const query = 'SELECT * FROM appointmentform';
     con.query(query, (err, results) => {
@@ -58,6 +58,18 @@ app.get('/appointments', (req, res) => {
     });
 });
 
+//API FOR UPDATE APPOINTMENT STATUS
+app.put('/updateAppointmentStatus', (req, res) => {
+    const { id, status } = req.body;
+    const query = 'UPDATE appointmentform SET status = ? WHERE id = ?';
+    con.query(query, [status, id], (err, result) => {
+        if (err) {
+            console.error('Error updating status:', err);
+            return res.status(500).send({ message: 'Backend: Error updating status' });
+        }
+        res.send(result);
+    });
+});
 
 //API FOR MY APPOINRTMENT(CUSTOMER)
 app.get('/myappointments', (req, res) => {
@@ -71,6 +83,32 @@ app.get('/myappointments', (req, res) => {
         res.send(results);
     });
 });
+
+app.put('/updateAppointment/:id', (req, res) => {
+    const { id } = req.params;
+    const updatedDetails = req.body;
+    const query = 'UPDATE appointmentform SET ? WHERE id = ?';
+    con.query(query, [updatedDetails, id], (err, result) => {
+        if (err) {
+            console.error('Error updating appointment:', err);
+            return res.status(500).send({ message: 'Backend: Error updating appointment' });
+        }
+        res.send({ message: 'Appointment updated successfully' });
+    });
+});
+
+app.delete('/deleteAppointment/:id', (req, res) => {
+    const { id } = req.params;
+    const query = 'DELETE FROM appointmentform WHERE id = ?';
+    con.query(query, [id], (err, result) => {
+        if (err) {
+            console.error('Error deleting appointment:', err);
+            return res.status(500).send({ message: 'Backend: Error deleting appointment' });
+        }
+        res.send({ message: 'Appointment deleted successfully' });
+    });
+});
+
 
 
 //API to check user for login
@@ -92,7 +130,7 @@ app.post('/login', async (req, res) => {
                         return res.status(500).json("fail");
                     }
                     if (isMatch) {
-                        res.json("exist");
+                        res.json({ status: "exist", role: user.role, username: user.username });
                     } else {
                         res.json("incorrect password");
                     }
@@ -170,6 +208,36 @@ app.get('/employeedetails', (req, res) => {
     });
 });
 
+app.delete('/employees/:id', (req, res) => {
+    const id = req.params.id;
+    const query = 'DELETE FROM employee WHERE employee_id = ?';
+    con.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Error deleting data:', err);
+            return res.status(500).send({ message: 'Backend: Error deleting data' });
+        }
+        res.send({ message: 'Employee deleted successfully' });
+    });
+});
+
+app.put('/employees/:id', (req, res) => {
+    const id = req.params.id;
+    const { employee_type, firstname, lastname, email, phone, address } = req.body;
+    const query = `
+        UPDATE employee
+        SET employee_type = ?, firstname = ?, lastname = ?, email = ?, phone = ?, address = ?
+        WHERE employee_id = ?
+    `;
+    const values = [employee_type, firstname, lastname, email, phone, address, id];
+    
+    con.query(query, values, (err, results) => {
+        if (err) {
+            console.error('Error updating data:', err);
+            return res.status(500).send({ message: 'Backend: Error updating data' });
+        }
+        res.send({ message: 'Employee updated successfully' });
+    });
+});
 
 app.get('/' , (req, res)=> {
     return res.json("From Backend Side");
