@@ -17,9 +17,10 @@ function LoginForm() {
       password: password,
     }).then((response) => {
       if (response.data.status === 'exist') {
-        setUser({ role: response.data.role, username: response.data.username });  // Set user info in context
+        const userData = { role: response.data.role, username: response.data.username };
+        setUser(userData);  // Set user info in context
+        localStorage.setItem('user', JSON.stringify(userData));  // Store user info in local storage
         navigate('/');
-        console.log(response.data.role)
       } else {
         setLoginStatus("Login failed. Check credentials.");
       }

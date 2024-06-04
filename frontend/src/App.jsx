@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+// App.js
+import React from 'react';
 import './index.css';
-import { Routes, Route, Link } from 'react-router-dom';
-import axios from 'axios';
+import { Routes, Route } from 'react-router-dom';
 import Home from './Pages/Home';
 import Appointment from './Pages/Appointment';
 import Contact from './Pages/Contact';
@@ -20,44 +20,93 @@ import CustomerDetailsPage from './Pages/Manager/CustomerDetailsPage';
 import EmployeeDetailsPage from './Pages/Manager/EmployeeDetailsPage';
 import VehicleDetailsPage from './Pages/Manager/VehicleDetailsPage';
 import MAppointmentDetails from './Pages/Manager/MAppointmentDetails';
-import ProtectedRoute from './components/ProtectedRoute';  // Import ProtectedRoute
-
-
+import ProtectedRoute from './components/ProtectedRoute';
+import { useUser } from './UserContext';
 
 function App() {
-  // const [listOfCustomers, setListOfCustomers] = useState([])
-  // useEffect(() => {
-  //   axios.get("http://localhost:8081/customers")
-  //     .then(response => {
-  //       setListOfCustomers(response.data);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching customer data:', error);
-  //     });
-  // }, []);
+  const { loading } = useUser();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/appointment" element={<Appointment />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard/customer" element={<CustomerDashboard />} />
-        <Route path="/dashboard/customer/makeappointment" element={<MakeApp />} />
-        <Route path="/dashboard/customer/myappointment" element={<MyAppointment />} />
-        <Route path="/dashboard/customer/givefeedback" element={<GiveFeedbackPage />} />
-        <Route path="/dashboard/employee" element={<EmployeeDashboard />} />
-        <Route path="/dashboard/employee/AppointmentDetails" element={<AppointmentDetails />} />
-        <Route path="/dashboard/employee/jobdetails" element={<JobDetails />} />
-        <Route path="/dashboard/manager" element={<ManagerDashboard />} />
-        <Route path="/dashboard/manager/customerdetails" element={<CustomerDetailsPage />} />
-        <Route path="/dashboard/manager/appointmentdetails" element={<MAppointmentDetails />} />
-        <Route path="/dashboard/manager/emplyeedetails" element={<EmployeeDetailsPage />} />
-        <Route path="/dashboard/manager/vehicledetails" element={<VehicleDetailsPage />} />
-        <Route path="/dashboard/manager/veiwfeedback" element={<ViewFeedbackPage />} />
+        
+        {/* Protected routes */}
+        <Route path="/dashboard/customer" element={
+          <ProtectedRoute allowedRoles={['customer']}>
+            <CustomerDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/customer/makeappointment" element={
+          <ProtectedRoute allowedRoles={['customer']}>
+            <MakeApp />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/customer/myappointment" element={
+          <ProtectedRoute allowedRoles={['customer']}>
+            <MyAppointment />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/customer/givefeedback" element={
+          <ProtectedRoute allowedRoles={['customer']}>
+            <GiveFeedbackPage />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/dashboard/employee" element={
+          <ProtectedRoute allowedRoles={['employee']}>
+            <EmployeeDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/employee/appointmentdetails" element={
+          <ProtectedRoute allowedRoles={['employee']}>
+            <AppointmentDetails />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/employee/jobdetails" element={
+          <ProtectedRoute allowedRoles={['employee']}>
+            <JobDetails />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/dashboard/manager" element={
+          <ProtectedRoute allowedRoles={['manager']}>
+            <ManagerDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/manager/customerdetails" element={
+          <ProtectedRoute allowedRoles={['manager']}>
+            <CustomerDetailsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/manager/appointmentdetails" element={
+          <ProtectedRoute allowedRoles={['manager']}>
+            <MAppointmentDetails />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/manager/employeedetails" element={
+          <ProtectedRoute allowedRoles={['manager']}>
+            <EmployeeDetailsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/manager/vehicledetails" element={
+          <ProtectedRoute allowedRoles={['manager']}>
+            <VehicleDetailsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/manager/viewfeedback" element={
+          <ProtectedRoute allowedRoles={['manager']}>
+            <ViewFeedbackPage />
+          </ProtectedRoute>
+        } />
       </Routes>
     </>
   );

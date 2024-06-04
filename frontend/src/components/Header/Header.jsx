@@ -6,11 +6,11 @@ const Header = () => {
   const { user } = useUser(); // Access user info from context
 
   let dashboardLink;
-  if (user?.role === 'Customer') {
+  if (user?.role === 'customer') {
     dashboardLink = '/dashboard/customer';
-  } else if (user?.role === 'Employee') {
+  } else if (user?.role === 'employee') {
     dashboardLink = '/dashboard/employee';
-  } else if (user?.role === 'Manager') {
+  } else if (user?.role === 'manager') {
     dashboardLink = '/dashboard/manager';
   }
 

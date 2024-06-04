@@ -73,9 +73,9 @@ app.put('/updateAppointmentStatus', (req, res) => {
 
 //API FOR MY APPOINRTMENT(CUSTOMER)
 app.get('/myappointments', (req, res) => {
-    const firstname = req.query.firstname; 
-    const query = 'SELECT * FROM appointmentform WHERE firstname = ?';
-    con.query(query, [firstname], (err, results) => {
+    const email = req.body.email; 
+    const query = 'SELECT * FROM appointmentform WHERE email = ?';
+    con.query(query, [email], (err, results) => {
         if (err) {
             console.error('Error fetching data:', err);
             return res.status(500).send({ message: 'Backend: Error fetching data' });
@@ -130,7 +130,7 @@ app.post('/login', async (req, res) => {
                         return res.status(500).json("fail");
                     }
                     if (isMatch) {
-                        res.json({ status: "exist", role: user.role, username: user.username });
+                        res.json({ status: "exist", role: user.role, username: user.username, email: user.email });
                     } else {
                         res.json("incorrect password");
                     }

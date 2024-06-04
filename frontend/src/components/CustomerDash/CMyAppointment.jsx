@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useUser } from '../../UserContext'; // Import useUser from UserContext
+
 
 function CMyAppointment() {
     const [appointments, setAppointments] = useState([]);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
+    const { user } = useUser(); // Access user info from context
 
     useEffect(() => {
         fetchAppointments();
     }, []);
 
     const fetchAppointments = () => {
-        axios.get('http://localhost:5000/myappointments')
+        axios.get('http://localhost:5000/myappointments', {
+            email: user?.email,
+        })
             .then(response => {
                 setAppointments(response.data);
             })
@@ -18,6 +23,7 @@ function CMyAppointment() {
                 console.error('Error fetching appointment data from backend!', error);
                 alert('Error fetching appointment data from backend.');
             });
+            console.log(email)
     };
 
     const handleRowDoubleClick = (appointment) => {
