@@ -1,4 +1,3 @@
-// UserContext.js
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const UserContext = createContext();
@@ -17,8 +16,9 @@ export const UserProvider = ({ children }) => {
 
   const logout = () => {
     console.log('Logging out...');
-    setUser(null);
     localStorage.removeItem('user');
+    setUser(null);
+    console.log('User set to null and removed from localStorage');
   };
 
   return (

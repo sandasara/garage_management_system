@@ -1,9 +1,8 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { useUser } from '../../UserContext'; // Import useUser from UserContext
+import { useUser } from '../../UserContext';
 
 const Header = () => {
-  const { user } = useUser(); // Access user info from context
+  const { user } = useUser();
 
   let dashboardLink;
   if (user?.role === 'customer') {

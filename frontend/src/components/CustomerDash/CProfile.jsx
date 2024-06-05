@@ -1,4 +1,5 @@
 import React from 'react';
+import Logout from '/src/components/logout/logout';
 
 const CProfile = () => {
   return (
@@ -21,9 +22,7 @@ const CProfile = () => {
           <a href="/dashboard/customer/givefeedback" className="block py-4 px-6 hover:bg-gray-600">
             Give Feedback
           </a>
-          <a href="/" className="block py-4 px-6 hover:bg-gray-600">
-            Log Out
-          </a>
+          <Logout />
         </nav>
       </aside>
 

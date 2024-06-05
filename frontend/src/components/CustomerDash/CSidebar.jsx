@@ -1,7 +1,5 @@
-// CSidebar.jsx
-import React from 'react';
 import { Link } from 'react-router-dom';
-import Logout from '../logout/logout'; // Adjust the import path if necessary
+import Logout from '/src/components/logout/logout';
 
 function CSidebar() {
   return (
@@ -20,7 +18,7 @@ function CSidebar() {
           <Link to="/dashboard/customer/myappointment" className="block py-4 px-6 hover:bg-gray-600">
             My Appointment
           </Link>
-          <Logout /> {/* Use Logout component here */}
+          <Logout />
         </nav>
       </aside>
     </div>

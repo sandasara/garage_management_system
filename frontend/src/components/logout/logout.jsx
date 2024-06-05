@@ -1,7 +1,6 @@
-// Logout.jsx
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../UserContext'; // Adjust the import path if necessary
+import { useEffect } from 'react';
+import { useUser } from '../../UserContext';
 
 const Logout = () => {
   const { logout } = useUser();

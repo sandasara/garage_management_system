@@ -1,7 +1,8 @@
-// App.js
 import React from 'react';
 import './index.css';
 import { Routes, Route } from 'react-router-dom';
+import { useUser } from './UserContext';
+
 import Home from './Pages/Home';
 import Appointment from './Pages/Appointment';
 import Contact from './Pages/Contact';
@@ -21,7 +22,6 @@ import EmployeeDetailsPage from './Pages/Manager/EmployeeDetailsPage';
 import VehicleDetailsPage from './Pages/Manager/VehicleDetailsPage';
 import MAppointmentDetails from './Pages/Manager/MAppointmentDetails';
 import ProtectedRoute from './components/ProtectedRoute';
-import { useUser } from './UserContext';
 
 function App() {
   const { loading } = useUser();
@@ -38,7 +38,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        
+
         {/* Protected routes */}
         <Route path="/dashboard/customer" element={
           <ProtectedRoute allowedRoles={['customer']}>
