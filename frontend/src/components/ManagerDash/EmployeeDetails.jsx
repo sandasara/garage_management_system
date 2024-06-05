@@ -5,6 +5,7 @@ function EmployeeDetails() {
     const [employees, setEmployees] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [editMode, setEditMode] = useState(false);
+    const [addMode, setAddMode] = useState(false);
 
     useEffect(() => {
         fetchEmployees();
@@ -38,10 +39,20 @@ function EmployeeDetails() {
     };
 
     const handleSave = () => {
-        axios.put(`http://localhost:5000/employees/${selectedEmployee.employee_id}`, selectedEmployee)
+        const url = editMode
+        ? `http://localhost:5000/customer/${selectedEmployee.employee_id}`
+        : 'http://localhost:5000/addemployee';
+    const method = editMode ? 'put' : 'post';
+
+    axios({
+        method: method,
+        url: url,
+        data: selectedEmployee
+    })
             .then(response => {
                 fetchEmployees(); // Refresh the list
                 setEditMode(false);
+                setAddMode(false);
                 setSelectedEmployee(null);
             })
             .catch(error => {
@@ -55,10 +66,30 @@ function EmployeeDetails() {
         setSelectedEmployee({ ...selectedEmployee, [name]: value });
     };
 
+    const handleAddNew = () => {
+        setSelectedEmployee({
+            employee_id: '',
+            employee_type: '',
+            firstname: '',
+            lastname: '',
+            email: '',
+            phone: '',
+            address: ''
+        });
+        setAddMode(true);
+    };
+
+
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="text-3xl font-bold text-center text-gray-800 mb-6">Employee Details</div>
             <div className="bg-white shadow-xl rounded-lg p-8">
+            <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
+                    onClick={handleAddNew}
+                >
+                    Add New Employee
+                </button>
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr>
@@ -102,7 +133,7 @@ function EmployeeDetails() {
                 </table>
             </div>
 
-            {editMode && (
+            {(editMode || addMode)&& (
                 <div className="bg-white shadow-xl rounded-lg p-8 mt-6">
                     <div className="text-2xl font-bold text-center text-gray-800 mb-6">Edit Employee Details</div>
                     <form onSubmit={handleSave}>
@@ -114,7 +145,7 @@ function EmployeeDetails() {
                                     name="employee_id"
                                     value={selectedEmployee.employee_id}
                                     onChange={handleChange}
-                                    disabled
+                                    disabled= {editMode}
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
                             </div>

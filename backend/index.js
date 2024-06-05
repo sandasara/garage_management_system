@@ -1,20 +1,19 @@
 const express = require('express');
 const mysql = require('mysql');
-const cors = require('cors')
-const bcrypt = require('bcrypt')
+const cors = require('cors');
+const bcrypt = require('bcrypt');
 const util = require('util'); // Node.js utility module
 
-const app = express()
-app.use(cors())
+const app = express();
+app.use(cors());
 app.use(express.json());
-
 
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "HSRTIB@21422",
     database: "garageomega",
-  });
+});
 
 con.query = util.promisify(con.query);
 
@@ -26,8 +25,27 @@ con.connect((err) => {
     console.log('Connected to MySQL');
 });
 
+// Define a router
+const router = express.Router();
 
-//API for make appointment
+// Add a new customer
+app.post('/addcustomer', (req, res) => {
+    const { customer_id, firstname, lastname, email, phone, address } = req.body;
+    const query = 'INSERT INTO customer (customer_id, firstname, lastname, email, phone, address) VALUES (?, ?, ?, ?, ?, ?)';
+    con.query(query, [customer_id, firstname, lastname, email, phone, address], (err, result) => {
+        if (err) {
+            console.error('Error adding customer:', err);
+            res.status(500).send('Error adding customer');
+        } else {
+            res.status(200).send('Customer added successfully');
+        }
+    });
+});
+
+// Use the router
+app.use('/', router);
+
+// API for make appointment
 app.post('/appointmentform', (req, res) => {
     const { firstname, lastname, phone, vehicle_type, vehicle_no, date, time, description, appointment_type } = req.body;
     const query = `
@@ -41,12 +59,12 @@ app.post('/appointmentform', (req, res) => {
         if (err) {
             console.error('Error inserting data:', err);
             return res.status(500).send({ message: "Backend: Enter Correct Details" });
-        }    
+        }
         res.send(result);
     });
 });
 
-//API FOR VIEWING ALL APPOINTMENTS
+// API for viewing all appointments
 app.get('/appointments', (req, res) => {
     const query = 'SELECT * FROM appointmentform';
     con.query(query, (err, results) => {
@@ -58,7 +76,7 @@ app.get('/appointments', (req, res) => {
     });
 });
 
-//API FOR UPDATE APPOINTMENT STATUS
+// API for update appointment status
 app.put('/updateAppointmentStatus', (req, res) => {
     const { id, status } = req.body;
     const query = 'UPDATE appointmentform SET status = ? WHERE id = ?';
@@ -71,7 +89,7 @@ app.put('/updateAppointmentStatus', (req, res) => {
     });
 });
 
-//API FOR MY APPOINRTMENT(CUSTOMER)
+// API for my appointment (customer)
 app.get('/myappointments', (req, res) => {
     const firstname = req.query.firstname; 
     const query = 'SELECT * FROM appointmentform WHERE firstname = ?';
@@ -109,9 +127,7 @@ app.delete('/deleteAppointment/:id', (req, res) => {
     });
 });
 
-
-
-//API to check user for login
+// API to check user for login
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -138,7 +154,6 @@ app.post('/login', async (req, res) => {
             } else {
                 res.json("notexist");
             }
-            console.log(results)
         });
     } catch (e) {
         console.error('Error in try-catch:', e);
@@ -146,7 +161,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-//API for sign up
+// API for sign up
 app.post('/signup', async (req, res) => {
     const { email, username, password, role } = req.body;
     const checkQuery = 'SELECT * FROM users WHERE email = ?';
@@ -167,36 +182,35 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-//API for give feedback
+// API for give feedback
 app.post('/givefeedback', (req, res) => {
     const { content, email } = req.body;
     const query = 'INSERT INTO feedback (content, email) VALUES (?, ?)';
-  
-    con.query(query, [content, email], (err, results) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send('Error inserting feedback');
-      } else {
-        res.send('Feedback submitted successfully');
-      }
-    });
-  });
 
-  //API for View Feedback
-  app.get('/viewfeedback', (req, res) => {
+    con.query(query, [content, email], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Error inserting feedback');
+        } else {
+            res.send('Feedback submitted successfully');
+        }
+    });
+});
+
+// API for view feedback
+app.get('/viewfeedback', (req, res) => {
     const query = 'SELECT * FROM feedback';
     con.query(query, (err, results) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send('Error fetching feedback');
-      } else {
-        res.send(results);
-      }
+        if (err) {
+            console.log(err);
+            res.status(500).send('Error fetching feedback');
+        } else {
+            res.send(results);
+        }
     });
-  });
+});
 
-
-//API for get Employee Details
+// API for get employee details
 app.get('/employeedetails', (req, res) => {
     const query = 'SELECT * FROM employee';
     con.query(query, (err, results) => {
@@ -239,22 +253,67 @@ app.put('/employees/:id', (req, res) => {
     });
 });
 
-app.get('/' , (req, res)=> {
+// Add a new employee
+app.post('/addemployee', (req, res) => {
+    const { employee_id, employee_type, firstname, lastname, email, phone, address } = req.body;
+    const query = 'INSERT INTO employee (employee_id, employee_type, firstname, lastname, email, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    con.query(query, [employee_id, employee_type, firstname, lastname, email, phone, address], (err, result) => {
+        if (err) {
+            console.error('Error adding employee:', err);
+            res.status(500).send('Error adding employee');
+        } else {
+            res.status(200).send('Employee added successfully');
+        }
+    });
+});
+
+// API for get customer details
+app.get('/customerdetails', (req, res) => {
+    const query = 'SELECT * FROM customer';
+    con.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching data:', err);
+            return res.status(500).send({ message: 'Backend: Error fetching data' });
+        }
+        res.send(results);
+    });
+});
+
+app.delete('/customer/:id', (req, res) => {
+    const id = req.params.id;
+    const query = 'DELETE FROM customer WHERE customer_id = ?';
+    con.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Error deleting data:', err);
+            return res.status(500).send({ message: 'Backend: Error deleting data' });
+        }
+        res.send({ message: 'Customer deleted successfully' });
+    });
+});
+
+app.put('/customer/:id', (req, res) => {
+    const id = req.params.id;
+    const { customer_id, firstname, lastname, email, phone, address } = req.body;
+    const query = `
+        UPDATE customer
+        SET customer_id = ?, firstname = ?, lastname = ?, email = ?, phone = ?, address = ?
+        WHERE customer_id = ?
+    `;
+    const values = [customer_id, firstname, lastname, email, phone, address, id];
+    
+    con.query(query, values, (err, results) => {
+        if (err) {
+            console.error('Error updating data:', err);
+            return res.status(500).send({ message: 'Backend: Error updating data' });
+        }
+        res.send({ message: 'Customer updated successfully' });
+    });
+});
+
+app.get('/', (req, res) => {
     return res.json("From Backend Side");
-})
+});
 
-
-app.listen(5000, ()=> {
-    console.log("listning: http://localhost:5000/")
-})
-
-
-
-// db.sequelize.sync().then(() => {
-//     app.listen(8081, ()=> {
-//         console.log("listning: http://localhost:8081/")
-//     })
-// });
-
-// const modelsRouter = require("./routes/Routes");
-//app.use("/customer", modelsRouter );
+app.listen(5000, () => {
+    console.log("Listening: http://localhost:5000/");
+});
