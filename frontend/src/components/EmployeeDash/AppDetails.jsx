@@ -15,33 +15,33 @@ function AppDetails() {
             });
     }, []);
 
-    const handleStatusChange = (id, newStatus) => {
-        axios.put('http://localhost:5000/updateAppointmentStatus', { id, status: newStatus })
-            .then(response => {
-                setAppointments(prevAppointments => prevAppointments.map(appointment => 
-                    appointment.id === id ? { ...appointment, status: newStatus } : appointment
-                ));
-            })
-            .catch(error => {
-                console.error('Error updating appointment status!', error);
-                alert('Error updating appointment status.');
-            });
-    };
+    // const handleStatusChange = (id, newStatus) => {
+    //     axios.put('http://localhost:5000/updateAppointmentStatus', { id, status: newStatus })
+    //         .then(response => {
+    //             setAppointments(prevAppointments => prevAppointments.map(appointment => 
+    //                 appointment.id === id ? { ...appointment, status: newStatus } : appointment
+    //             ));
+    //         })
+    //         .catch(error => {
+    //             console.error('Error updating appointment status!', error);
+    //             alert('Error updating appointment status.');
+    //         });
+    // };
 
-    const getStatusClass = (status) => {
-        switch (status) {
-            case 'notstarted':
-                return 'text-blue-500';
-            case 'inprogress':
-                return 'text-yellow-500';
-            case 'completed':
-                return 'text-green-500';
-            case 'cancelled':
-                return 'text-red-500';
-            default:
-                return '';
-        }
-    };
+    // const getStatusClass = (status) => {
+    //     switch (status) {
+    //         case 'notstarted':
+    //             return 'text-blue-500';
+    //         case 'inprogress':
+    //             return 'text-yellow-500';
+    //         case 'completed':
+    //             return 'text-green-500';
+    //         case 'cancelled':
+    //             return 'text-red-500';
+    //         default:
+    //             return '';
+    //     }
+    // };
 
     return (
         <div className="container mx-auto px-4 py-6">
@@ -74,8 +74,8 @@ function AppDetails() {
                                 <td className="px-6 py-4 whitespace-nowrap">{appointment.time}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{appointment.description}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{appointment.appointment_type}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <select
+                                <td className="px-6 py-4 whitespace-nowrap">{appointment.status}
+                                    {/* <select
                                         value={appointment.status}
                                         onChange={(e) => handleStatusChange(appointment.id, e.target.value)}
                                         className={`status-dropdown ${getStatusClass(appointment.status)}`}
@@ -84,7 +84,7 @@ function AppDetails() {
                                         <option value="inprogress" className="text-yellow-500">In Progress</option>
                                         <option value="completed" className="text-green-500">Completed</option>
                                         <option value="cancelled" className="text-red-500">Cancelled</option>
-                                    </select>
+                                    </select> */}
                                 </td>
                             </tr>
                         ))}

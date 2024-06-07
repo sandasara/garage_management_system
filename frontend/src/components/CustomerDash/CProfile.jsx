@@ -1,4 +1,5 @@
 import React from 'react';
+import Logout from '../logout/Logout';
 
 const CProfile = () => {
   return (
@@ -21,9 +22,7 @@ const CProfile = () => {
           <a href="/dashboard/customer/givefeedback" className="block py-4 px-6 hover:bg-gray-600">
             Give Feedback
           </a>
-          <a href="/" className="block py-4 px-6 hover:bg-gray-600">
-            Log Out
-          </a>
+          <Logout />
         </nav>
       </aside>
 
@@ -55,7 +54,7 @@ const CProfile = () => {
               <input
                 type="email"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                defaultValue="amalkumara@gmail.com"
+                
               />
             </div>
             <div>

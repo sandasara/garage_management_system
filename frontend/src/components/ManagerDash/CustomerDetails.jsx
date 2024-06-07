@@ -6,6 +6,7 @@ function CustomerDetails() {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [addMode, setAddMode] = useState(false);
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         fetchCustomers();
@@ -23,14 +24,17 @@ function CustomerDetails() {
     };
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:5000/customer/${id}`)
-            .then(response => {
-                fetchCustomers(); // Refresh the list
-            })
-            .catch(error => {
-                console.error('Error deleting customer!', error);
-                alert('Error deleting customer.');
-            });
+        if (window.confirm("Are you sure you want to delete this customer?")) {
+            axios.delete(`http://localhost:5000/customer/${id}`)
+                .then(response => {
+                    setMessage('Successfully deleted');
+                    fetchCustomers(); // Refresh the list
+                })
+                .catch(error => {
+                    console.error('Error deleting customer!', error);
+                    alert('Error deleting customer.');
+                });
+        }
     };
 
     const handleUpdate = (customer) => {
@@ -38,7 +42,8 @@ function CustomerDetails() {
         setEditMode(true);
     };
 
-    const handleSave = () => {
+    const handleSave = (e) => {
+        e.preventDefault();
         const url = editMode
             ? `http://localhost:5000/customer/${selectedCustomer.customer_id}`
             : 'http://localhost:5000/addcustomer';
@@ -54,6 +59,7 @@ function CustomerDetails() {
                 setEditMode(false);
                 setAddMode(false);
                 setSelectedCustomer(null);
+                setMessage(editMode ? 'Successfully updated' : 'Successfully added a new customer');
             })
             .catch(error => {
                 console.error(`Error ${editMode ? 'updating' : 'adding'} customer!`, error);
@@ -82,6 +88,11 @@ function CustomerDetails() {
         <div className="container mx-auto px-4 py-6">
             <div className="text-3xl font-bold text-center text-gray-800 mb-6">Customer Details</div>
             <div className="bg-white shadow-xl rounded-lg p-8">
+                {message && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+                        <span className="block sm:inline">{message}</span>
+                    </div>
+                )}
                 <button
                     className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
                     onClick={handleAddNew}

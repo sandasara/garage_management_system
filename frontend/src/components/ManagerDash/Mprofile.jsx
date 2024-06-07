@@ -1,4 +1,5 @@
 import React from 'react';
+import Logout from '../logout/Logout';
 
 const ProfilePage = () => {
   return (
@@ -21,15 +22,16 @@ const ProfilePage = () => {
           <a href="/dashboard/manager/employeedetails" className="block py-4 px-6 hover:bg-gray-600">
             Employee Details
           </a>
+          <a href="/dashboard/manager/employeesignup" className="block py-4 px-6 hover:bg-gray-600">
+            Register Employees
+          </a>
           <a href="/dashboard/manager/jobDetails" className="block py-4 px-6 hover:bg-gray-600">
             Job Details
           </a>
           <a href="/dashboard/manager/veiwfeedback" className="block py-4 px-6 hover:bg-gray-600">
             View Feedback
           </a>
-          <a href="/" className="block py-4 px-6 hover:bg-gray-600">
-            Log Out
-          </a>
+          < Logout/>
         </nav>
       </aside>
 

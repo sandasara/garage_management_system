@@ -7,6 +7,8 @@ function Feedback() {
     content: '',
   });
 
+  const [successMessage, setSuccessMessage] = useState('');
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -22,8 +24,11 @@ function Feedback() {
     axios.post('http://localhost:5000/givefeedback', feedbackData)
       .then((response) => {
         console.log('Feedback created successfully', response.data);
-        // Reload the page after successful submission
-        window.location.reload();
+        setSuccessMessage('Feedback Recorded Successfully!');
+        setTimeout(() => {
+          setSuccessMessage('');
+          window.location.reload(); // Reload the page after successful submission
+        }, 3000);
       })
       .catch((error) => {
         console.error('There was an error creating the feedback!', error);
@@ -34,6 +39,11 @@ function Feedback() {
     <div className="bg-gray-800 rounded-lg p-5 max-w-md mx-auto my-24">
       <div className="bg-white shadow-md rounded-lg p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Feedback Form</h2>
+        {successMessage && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span className="block sm:inline">{successMessage}</span>
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="content" className="block text-gray-700 font-semibold mb-2">

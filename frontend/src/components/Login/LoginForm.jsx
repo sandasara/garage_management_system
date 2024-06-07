@@ -4,7 +4,7 @@ import Axios from "axios";
 import { useUser } from '../../UserContext';
 
 function LoginForm() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
   const navigate = useNavigate();
@@ -13,13 +13,15 @@ function LoginForm() {
   const handleLogin = (e) => {
     e.preventDefault();
     Axios.post("http://localhost:5000/login", {
-      username: username,
+      email: email,  // Changed from username to email
       password: password,
     }).then((response) => {
       if (response.data.status === 'exist') {
-        setUser({ role: response.data.role, username: response.data.username });  // Set user info in context
+        const userData = { role: response.data.role, email: response.data.email };  // Changed from username to email
+        setUser(userData);  // Set user info in context
+        localStorage.setItem('user', JSON.stringify(userData));  // Store user info in local storage
         navigate('/');
-        console.log(response.data.role)
+        console.log(response.data.role);
       } else {
         setLoginStatus("Login failed. Check credentials.");
       }
@@ -35,9 +37,9 @@ function LoginForm() {
         <h2 className="text-lg font-bold mb-6 text-center">Log In</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
-            <input type="text" name="username" id="username" 
-              onChange={(e) => setUsername(e.target.value)} required
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" name="email" id="email" 
+              onChange={(e) => setEmail(e.target.value)} required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
           </div>
           <div className="mb-6">
