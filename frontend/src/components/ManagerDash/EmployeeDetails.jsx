@@ -5,6 +5,8 @@ function EmployeeDetails() {
     const [employees, setEmployees] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [editMode, setEditMode] = useState(false);
+    const [addMode, setAddMode] = useState(false);
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         fetchEmployees();
@@ -22,14 +24,17 @@ function EmployeeDetails() {
     };
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:5000/employees/${id}`)
-            .then(response => {
-                fetchEmployees(); // Refresh the list
-            })
-            .catch(error => {
-                console.error('Error deleting employee!', error);
-                alert('Error deleting employee.');
-            });
+        if (window.confirm("Are you sure you want to delete this employee?")) {
+            axios.delete(`http://localhost:5000/employees/${id}`)
+                .then(response => {
+                    setMessage('Successfully deleted');
+                    fetchEmployees(); // Refresh the list
+                })
+                .catch(error => {
+                    console.error('Error deleting employee!', error);
+                    alert('Error deleting employee.');
+                });
+        }
     };
 
     const handleUpdate = (employee) => {
@@ -37,12 +42,24 @@ function EmployeeDetails() {
         setEditMode(true);
     };
 
-    const handleSave = () => {
-        axios.put(`http://localhost:5000/employees/${selectedEmployee.employee_id}`, selectedEmployee)
+    const handleSave = (e) => {
+        e.preventDefault();
+        const url = editMode
+            ? `http://localhost:5000/employees/${selectedEmployee.employee_id}`
+            : 'http://localhost:5000/addemployee';
+        const method = editMode ? 'put' : 'post';
+
+        axios({
+            method: method,
+            url: url,
+            data: selectedEmployee
+        })
             .then(response => {
                 fetchEmployees(); // Refresh the list
                 setEditMode(false);
+                setAddMode(false);
                 setSelectedEmployee(null);
+                setMessage(editMode ? 'Successfully updated' : 'Successfully added a new employee');
             })
             .catch(error => {
                 console.error('Error updating employee!', error);
@@ -55,10 +72,34 @@ function EmployeeDetails() {
         setSelectedEmployee({ ...selectedEmployee, [name]: value });
     };
 
+    const handleAddNew = () => {
+        setSelectedEmployee({
+            employee_id: '',
+            employee_type: '',
+            firstname: '',
+            lastname: '',
+            email: '',
+            phone: '',
+            address: ''
+        });
+        setAddMode(true);
+    };
+
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="text-3xl font-bold text-center text-gray-800 mb-6">Employee Details</div>
             <div className="bg-white shadow-xl rounded-lg p-8">
+                {message && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+                        <span className="block sm:inline">{message}</span>
+                    </div>
+                )}
+                <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
+                    onClick={handleAddNew}
+                >
+                    Add New Employee
+                </button>
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr>
@@ -102,7 +143,7 @@ function EmployeeDetails() {
                 </table>
             </div>
 
-            {editMode && (
+            {(editMode || addMode) && (
                 <div className="bg-white shadow-xl rounded-lg p-8 mt-6">
                     <div className="text-2xl font-bold text-center text-gray-800 mb-6">Edit Employee Details</div>
                     <form onSubmit={handleSave}>
@@ -114,7 +155,7 @@ function EmployeeDetails() {
                                     name="employee_id"
                                     value={selectedEmployee.employee_id}
                                     onChange={handleChange}
-                                    disabled
+                                    disabled={editMode}
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
                             </div>
@@ -168,7 +209,7 @@ function EmployeeDetails() {
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
                             </div>
-                            <div>
+                            <div className="col-span-2">
                                 <label className="block text-sm font-medium text-gray-700">Address</label>
                                 <input
                                     type="text"
@@ -179,19 +220,12 @@ function EmployeeDetails() {
                                 />
                             </div>
                         </div>
-                        <div className="mt-6 flex justify-center">
+                        <div className="mt-6 flex justify-end">
                             <button
                                 type="submit"
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                             >
                                 Save
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => { setEditMode(false); setSelectedEmployee(null); }}
-                                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-4"
-                            >
-                                Cancel
                             </button>
                         </div>
                     </form>

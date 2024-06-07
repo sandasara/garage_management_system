@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function EmployeeDetails() {
-    const [employees, setEmployees] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
+function CustomerDetails() {
+    const [customer, setCustomer] = useState([]);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [editMode, setEditMode] = useState(false);
+    const [addMode, setAddMode] = useState(false);
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
-        fetchEmployees();
+        fetchCustomers();
     }, []);
 
-    const fetchEmployees = () => {
+    const fetchCustomers = () => {
         axios.get('http://localhost:5000/customerdetails')
             .then(response => {
-                setEmployees(response.data);
+                setCustomer(response.data);
             })
             .catch(error => {
                 console.error('Error fetching customer data from backend!', error);
@@ -22,43 +24,81 @@ function EmployeeDetails() {
     };
 
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:5000/customer/${id}`)
-            .then(response => {
-                fetchEmployees(); // Refresh the list
-            })
-            .catch(error => {
-                console.error('Error deleting customer!', error);
-                alert('Error deleting customer.');
-            });
+        if (window.confirm("Are you sure you want to delete this customer?")) {
+            axios.delete(`http://localhost:5000/customer/${id}`)
+                .then(response => {
+                    setMessage('Successfully deleted');
+                    fetchCustomers(); // Refresh the list
+                })
+                .catch(error => {
+                    console.error('Error deleting customer!', error);
+                    alert('Error deleting customer.');
+                });
+        }
     };
 
     const handleUpdate = (customer) => {
-        setSelectedEmployee(customer);
+        setSelectedCustomer(customer);
         setEditMode(true);
     };
 
-    const handleSave = () => {
-        axios.put(`http://localhost:5000/customer/${selectedCustomer.customer_id}`, selectedEmployee)
+    const handleSave = (e) => {
+        e.preventDefault();
+        const url = editMode
+            ? `http://localhost:5000/customer/${selectedCustomer.customer_id}`
+            : 'http://localhost:5000/addcustomer';
+        const method = editMode ? 'put' : 'post';
+
+        axios({
+            method: method,
+            url: url,
+            data: selectedCustomer
+        })
             .then(response => {
-                fetchCustomer(); // Refresh the list
+                fetchCustomers(); // Refresh the list
                 setEditMode(false);
+                setAddMode(false);
                 setSelectedCustomer(null);
+                setMessage(editMode ? 'Successfully updated' : 'Successfully added a new customer');
             })
             .catch(error => {
-                console.error('Error updating customer!', error);
-                alert('Error updating customer.');
+                console.error(`Error ${editMode ? 'updating' : 'adding'} customer!`, error);
+                alert(`Error ${editMode ? 'updating' : 'adding'} customer.`);
             });
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setSelectedEmployee({ ...selectedCustomer, [name]: value });
+        setSelectedCustomer({ ...selectedCustomer, [name]: value });
+    };
+
+    const handleAddNew = () => {
+        setSelectedCustomer({
+            customer_id: '',
+            firstname: '',
+            lastname: '',
+            email: '',
+            phone: '',
+            address: ''
+        });
+        setAddMode(true);
     };
 
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="text-3xl font-bold text-center text-gray-800 mb-6">Customer Details</div>
             <div className="bg-white shadow-xl rounded-lg p-8">
+                {message && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+                        <span className="block sm:inline">{message}</span>
+                    </div>
+                )}
+                <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
+                    onClick={handleAddNew}
+                >
+                    Add New Customer
+                </button>
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr>
@@ -72,9 +112,9 @@ function EmployeeDetails() {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {employees.map((customer, index) => (
+                        {customer.map((customer, index) => (
                             <tr key={index}>
-                                <td className="px-6 py-4 whitespace-nowrap">{customer.employee_id}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{customer.customer_id}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{customer.firstname}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{customer.lastname}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{customer.email}</td>
@@ -83,13 +123,13 @@ function EmployeeDetails() {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <button
                                         className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
-                                        onClick={() => handleUpdate(employee)}
+                                        onClick={() => handleUpdate(customer)}
                                     >
                                         Update
                                     </button>
                                     <button
                                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-                                        onClick={() => handleDelete(employee.employee_id)}
+                                        onClick={() => handleDelete(customer.customer_id)}
                                     >
                                         Delete
                                     </button>
@@ -100,29 +140,19 @@ function EmployeeDetails() {
                 </table>
             </div>
 
-            {editMode && (
+            {(editMode || addMode) && (
                 <div className="bg-white shadow-xl rounded-lg p-8 mt-6">
-                    <div className="text-2xl font-bold text-center text-gray-800 mb-6">Edit Employee Details</div>
+                    <div className="text-2xl font-bold text-center text-gray-800 mb-6">{editMode ? 'Edit' : 'Add'} Customer Details</div>
                     <form onSubmit={handleSave}>
                         <div className="grid grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Employee ID</label>
+                                <label className="block text-sm font-medium text-gray-700">Customer ID</label>
                                 <input
                                     type="text"
-                                    name="employee_id"
-                                    value={selectedEmployee.employee_id}
+                                    name="customer_id"
+                                    value={selectedCustomer.customer_id}
                                     onChange={handleChange}
-                                    disabled
-                                    className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Employee Type</label>
-                                <input
-                                    type="text"
-                                    name="employee_type"
-                                    value={selectedEmployee.employee_type}
-                                    onChange={handleChange}
+                                    disabled={editMode}
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
                             </div>
@@ -131,7 +161,7 @@ function EmployeeDetails() {
                                 <input
                                     type="text"
                                     name="firstname"
-                                    value={selectedEmployee.firstname}
+                                    value={selectedCustomer.firstname}
                                     onChange={handleChange}
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
@@ -141,7 +171,7 @@ function EmployeeDetails() {
                                 <input
                                     type="text"
                                     name="lastname"
-                                    value={selectedEmployee.lastname}
+                                    value={selectedCustomer.lastname}
                                     onChange={handleChange}
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
@@ -151,7 +181,7 @@ function EmployeeDetails() {
                                 <input
                                     type="email"
                                     name="email"
-                                    value={selectedEmployee.email}
+                                    value={selectedCustomer.email}
                                     onChange={handleChange}
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
@@ -161,7 +191,7 @@ function EmployeeDetails() {
                                 <input
                                     type="text"
                                     name="phone"
-                                    value={selectedEmployee.phone}
+                                    value={selectedCustomer.phone}
                                     onChange={handleChange}
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
@@ -171,7 +201,7 @@ function EmployeeDetails() {
                                 <input
                                     type="text"
                                     name="address"
-                                    value={selectedEmployee.address}
+                                    value={selectedCustomer.address}
                                     onChange={handleChange}
                                     className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                 />
@@ -186,7 +216,7 @@ function EmployeeDetails() {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => { setEditMode(false); setSelectedEmployee(null); }}
+                                onClick={() => { setEditMode(false); setAddMode(false); setSelectedCustomer(null); }}
                                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-4"
                             >
                                 Cancel
@@ -199,4 +229,4 @@ function EmployeeDetails() {
     );
 }
 
-export default EmployeeDetails;
+export default CustomerDetails;

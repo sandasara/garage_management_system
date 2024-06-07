@@ -1,16 +1,15 @@
-import { Navigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useUser } from '../UserContext';
 
-const ProtectedRoute = ({ allowedRoles, children }) => {
+const ProtectedRoute = ({ allowedRoles }) => {
   const { user } = useUser();
 
-  console.log("User in ProtectedRoute:", user);
-
   if (!user || !allowedRoles.includes(user.role)) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

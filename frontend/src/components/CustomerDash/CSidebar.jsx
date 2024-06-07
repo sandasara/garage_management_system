@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Logout from '/src/components/logout/logout';
+import Logout from '../logout/Logout';
 
 function CSidebar() {
   return (

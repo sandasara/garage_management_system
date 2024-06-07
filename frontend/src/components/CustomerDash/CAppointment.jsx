@@ -1,6 +1,7 @@
 import React from 'react';
 import AppointForm from '../Appointment/AppointForm';
 //import CSidebar from '../../components/CustomerDash/CSidebar'
+import Logout from '../logout/Logout';
 
 
 function CAppointment() {
@@ -24,9 +25,7 @@ function CAppointment() {
           <a href="/dashboard/customer/givefeedback" className="block py-4 px-6 hover:bg-gray-600">
             Give Feedback
           </a>
-          <a href="/" className="block py-4 px-6 hover:bg-gray-600">
-            Log Out
-          </a>
+          <Logout/>
         </nav>
       </aside>
 

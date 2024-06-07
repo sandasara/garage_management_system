@@ -1,5 +1,5 @@
 import React from 'react';
-import Logout from '/src/components/logout/logout';
+import Logout from '../logout/Logout';
 
 const CProfile = () => {
   return (
@@ -54,7 +54,7 @@ const CProfile = () => {
               <input
                 type="email"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                defaultValue="amalkumara@gmail.com"
+                
               />
             </div>
             <div>

@@ -34,8 +34,12 @@ const Header = () => {
           )}
           {!user && (
             <>
-              <a href="/Signup" className="px-2 hover:bg-gray-600">Sign Up</a>
-              <a href="/Login" className="px-2 hover:bg-gray-600">Log In</a>
+              <a href="/Signup" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Sign Up
+              </a>
+              <a href="/Login" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Log In
+              </a>
             </>
           )}
         </div>

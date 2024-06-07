@@ -2,23 +2,29 @@ import React, { useState } from 'react';
 import Axios from "axios";
 
 function SignupForm() {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [signupStatus, setSignupStatus] = useState("");
 
   const handleSignup = (e) => {
     e.preventDefault();
     Axios.post("http://localhost:5000/signup", {
-      username: username,
+      address: address,
       email: email,
       password: password,
+      firstname: firstname,
+      lastname: lastname,
+      phone: phone,
       role: 'customer'
     }).then((response) => {
-      if (response.data === 'exist') {
-        setSignupStatus('User already exists');
-      } else if(response.data === 'notexist') {
-        setSignupStatus("Account Created Successfully");
+      if (response.data.status === 'success') {
+        setSignupStatus(response.data.status || "Account Created Successfully");
+      } else {
+        setSignupStatus(response.data.status || "Signup failed. Please try again.");
       }
     }).catch(error => {
       console.error('Signup error:', error);
@@ -32,16 +38,55 @@ function SignupForm() {
         <h2 className="text-lg font-bold mb-6 text-center">Sign Up</h2>
         <form onSubmit={handleSignup}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
             <input
               type="text"
-              name="username"
-              id="username"
+              name="firstname"
+              id="firstname"
               required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={firstname}
+              onChange={(e) => setFirstName(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter Your UserName"
+              placeholder="Enter Your First Name"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
+            <input
+              type="text"
+              name="lastname"
+              id="lastname"
+              required
+              value={lastname}
+              onChange={(e) => setLastName(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter Your Last Name"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+            <input
+              type="tel"
+              name="phone"
+              id="phone"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter Your Phone Number"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+            <input
+              type="text"
+              name="address"
+              id="address"
+              required
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter Your Adress"
             />
           </div>
           <div className="mb-4">
